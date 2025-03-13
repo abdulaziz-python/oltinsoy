@@ -1,0 +1,111 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="/static/admin/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Ommaviy xabar yuborish</h1>
+    </div>
+
+    <div class="broadcast-form-container">
+        <form method="post" action="{% url 'admin:send_broadcast' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Sarlavha:</label>
+                <input type="text" id="title" name="title" required class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Xabar matni:</label>
+                <textarea id="message" name="message" required class="form-control" rows="5"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="target_type">Qabul qiluvchilar:</label>
+                <select id="target_type" name="target_type" class="form-control" onchange="toggleTargetOptions()">
+                    <option value="all">Barcha foydalanuvchilar</option>
+                    <option value="district">Tuman bo'yicha</option>
+                    <option value="mahalla">Mahalla bo'yicha</option>
+                </select>
+            </div>
+            
+            <div id="district_options" class="form-group" style="display: none;">
+                <label for="district_id">Tuman:</label>
+                <select id="district_id" name="district_id" class="form-control">
+                    {% for district in districts %}
+                    <option value="{{ district.id }}">{{ district.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div id="mahalla_options" class="form-group" style="display: none;">
+                <label for="mahalla_id">Mahalla:</label>
+                <select id="mahalla_id" name="mahalla_id" class="form-control">
+                    {% for mahalla in mahallas %}
+                    <option value="{{ mahalla.id }}">{{ mahalla.name }} ({{ mahalla.district.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Xabarni yuborish</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="dashboard-tables">
+        <div class="table-container">
+            <h2>Yuborilgan xabarlar</h2>
+            <table class="broadcast-table">
+                <thead>
+                    <tr>
+                        <th>Sarlavha</th>
+                        <th>Yuborilgan sana</th>
+                        <th>Yuboruvchi</th>
+                        <th>Qabul qiluvchilar</th>
+                        <th>Yetkazilgan</th>
+                        <th>O'qilgan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for broadcast in broadcasts %}
+                    <tr>
+                        <td>{{ broadcast.title }}</td>
+                        <td>{{ broadcast.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>{{ broadcast.created_by.full_name|default:broadcast.created_by.username }}</td>
+                        <td>{{ broadcast.recipients_count }}</td>
+                        <td>{{ broadcast.delivered_count }}</td>
+                        <td>{{ broadcast.read_count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-message">Hali xabarlar yuborilmagan</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleTargetOptions() {
+        const targetType = document.getElementById('target_type').value;
+        const districtOptions = document.getElementById('district_options');
+        const mahallaOptions = document.getElementById('mahalla_options');
+        
+        districtOptions.style.display = 'none';
+        mahallaOptions.style.display = 'none';
+        
+        if (targetType === 'district') {
+            districtOptions.style.display = 'block';
+        } else if (targetType === 'mahalla') {
+            mahallaOptions.style.display = 'block';
+        }
+    }
+</script>
+{% endblock %}
+

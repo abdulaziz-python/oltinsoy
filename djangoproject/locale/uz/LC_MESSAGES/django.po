@@ -1,0 +1,273 @@
+# Uzbek translation
+msgid ""
+msgstr ""
+"Project-Id-Version: Django\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-10 12:00+0000\n"
+"PO-Revision-Date: 2025-03-10 12:00+0000\n"
+"Last-Translator: Admin\n"
+"Language-Team: Uzbek\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Oltinsoy tuman hokimligi"
+msgstr "Oltinsoy tuman hokimligi"
+
+msgid "Boshqaruv paneli"
+msgstr "Boshqaruv paneli"
+
+msgid "Statistika paneli"
+msgstr "Statistika paneli"
+
+msgid "Davr"
+msgstr "Davr"
+
+msgid "So'nggi 7 kun"
+msgstr "So'nggi 7 kun"
+
+msgid "So'nggi 30 kun"
+msgstr "So'nggi 30 kun"
+
+msgid "So'nggi 3 oy"
+msgstr "So'nggi 3 oy"
+
+msgid "So'nggi 6 oy"
+msgstr "So'nggi 6 oy"
+
+msgid "Jami topshiriqlar"
+msgstr "Jami topshiriqlar"
+
+msgid "Bajarilgan"
+msgstr "Bajarilgan"
+
+msgid "Faol"
+msgstr "Faol"
+
+msgid "Rad etilgan"
+msgstr "Rad etilgan"
+
+msgid "Kunlik statistika"
+msgstr "Kunlik statistika"
+
+msgid "Mahallalar reytingi"
+msgstr "Mahallalar reytingi"
+
+msgid "Mahalla"
+msgstr "Mahalla"
+
+msgid "Tuman"
+msgstr "Tuman"
+
+msgid "Holat"
+msgstr "Holat"
+
+msgid "Topshiriqlar"
+msgstr "Topshiriqlar"
+
+msgid "Bajarilish %"
+msgstr "Bajarilish %"
+
+msgid "Amallar"
+msgstr "Amallar"
+
+msgid "Oylik statistika"
+msgstr "Oylik statistika"
+
+msgid "Xodimlar statistikasi"
+msgstr "Xodimlar statistikasi"
+
+msgid "Xodim"
+msgstr "Xodim"
+
+msgid "Lavozim"
+msgstr "Lavozim"
+
+msgid "Batafsil"
+msgstr "Batafsil"
+
+msgid "Yashil"
+msgstr "Yashil"
+
+msgid "Sariq"
+msgstr "Sariq"
+
+msgid "Qizil"
+msgstr "Qizil"
+
+msgid "Jami"
+msgstr "Jami"
+
+msgid "Viloyat"
+msgstr "Viloyat"
+
+msgid "Viloyatlar"
+msgstr "Viloyatlar"
+
+msgid "Nomi"
+msgstr "Nomi"
+
+msgid "Tumanlar"
+msgstr "Tumanlar"
+
+msgid "Mahallalar"
+msgstr "Mahallalar"
+
+msgid "Holati"
+msgstr "Holati"
+
+msgid "Lavozimlar"
+msgstr "Lavozimlar"
+
+msgid "Xodim turi"
+msgstr "Xodim turi"
+
+msgid "Xodim turlari"
+msgstr "Xodim turlari"
+
+msgid "Foydalanuvchi nomi"
+msgstr "Foydalanuvchi nomi"
+
+msgid "Elektron pochta"
+msgstr "Elektron pochta"
+
+msgid "To'liq ism"
+msgstr "To'liq ism"
+
+msgid "Telefon raqami"
+msgstr "Telefon raqami"
+
+msgid "JSHIR"
+msgstr "JSHIR"
+
+msgid "Telegram ID"
+msgstr "Telegram ID"
+
+msgid "Admin holati"
+msgstr "Admin holati"
+
+msgid "Faol"
+msgstr "Faol"
+
+msgid "Ro'yxatdan o'tgan sana"
+msgstr "Ro'yxatdan o'tgan sana"
+
+msgid "So'nggi kirish"
+msgstr "So'nggi kirish"
+
+msgid "Foydalanuvchi"
+msgstr "Foydalanuvchi"
+
+msgid "Foydalanuvchilar"
+msgstr "Foydalanuvchilar"
+
+msgid "Qurilma ID"
+msgstr "Qurilma ID"
+
+msgid "Qurilma nomi"
+msgstr "Qurilma nomi"
+
+msgid "IP manzil"
+msgstr "IP manzil"
+
+msgid "Qurilma sessiyasi"
+msgstr "Qurilma sessiyasi"
+
+msgid "Qurilma sessiyalari"
+msgstr "Qurilma sessiyalari"
+
+msgid "Sarlavha"
+msgstr "Sarlavha"
+
+msgid "Tavsif"
+msgstr "Tavsif"
+
+msgid "Muddat"
+msgstr "Muddat"
+
+msgid "Yaratilgan sana"
+msgstr "Yaratilgan sana"
+
+msgid "Yangilangan sana"
+msgstr "Yangilangan sana"
+
+msgid "Topshiriq"
+msgstr "Topshiriq"
+
+msgid "Topshiriqlar"
+msgstr "Topshiriqlar"
+
+msgid "Topshiriqlar soni"
+msgstr "Topshiriqlar soni"
+
+msgid "Bajarilish darajasi"
+msgstr "Bajarilish darajasi"
+
+msgid "Yashil holatga o'tkazish"
+msgstr "Yashil holatga o'tkazish"
+
+msgid "Sariq holatga o'tkazish"
+msgstr "Sariq holatga o'tkazish"
+
+msgid "Qizil holatga o'tkazish"
+msgstr "Qizil holatga o'tkazish"
+
+msgid "Shaxsiy ma'lumotlar"
+msgstr "Shaxsiy ma'lumotlar"
+
+msgid "Ish ma'lumotlari"
+msgstr "Ish ma'lumotlari"
+
+msgid "Huquqlar"
+msgstr "Huquqlar"
+
+msgid "Muhim sanalar"
+msgstr "Muhim sanalar"
+
+msgid "Topshiriq jarayoni"
+msgstr "Topshiriq jarayoni"
+
+msgid "Topshiriq jarayonlari"
+msgstr "Topshiriq jarayonlari"
+
+msgid "Fayl"
+msgstr "Fayl"
+
+msgid "Fayl nomi"
+msgstr "Fayl nomi"
+
+msgid "Fayl turi"
+msgstr "Fayl turi"
+
+msgid "Yuklangan sana"
+msgstr "Yuklangan sana"
+
+msgid "Topshiriq fayli"
+msgstr "Topshiriq fayli"
+
+msgid "Topshiriq fayllari"
+msgstr "Topshiriq fayllari"
+
+msgid "Rad etish sababi"
+msgstr "Rad etish sababi"
+
+msgid "Topshiriq holati"
+msgstr "Topshiriq holati"
+
+msgid "Topshiriq holatlari"
+msgstr "Topshiriq holatlari"
+
+msgid "Bajarilgan deb belgilash"
+msgstr "Bajarilgan deb belgilash"
+
+msgid "Rad etilgan deb belgilash"
+msgstr "Rad etilgan deb belgilash"
+
+msgid "Mahallalarni yashil holatga o'tkazish"
+msgstr "Mahallalarni yashil holatga o'tkazish"
+
+msgid "Mahallalarni sariq holatga o'tkazish"
+msgstr "Mahallalarni sariq holatga o'tkazish"
+

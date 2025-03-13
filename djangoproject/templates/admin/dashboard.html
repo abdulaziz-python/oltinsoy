@@ -1,0 +1,356 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="/static/admin/css/dashboard.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Statistika paneli</h1>
+        <div class="filter-controls">
+            <label for="period-select">Davr:</label>
+            <select id="period-select">
+                <option value="7">So'nggi 7 kun</option>
+                <option value="30" selected>So'nggi 30 kun</option>
+                <option value="90">So'nggi 3 oy</option>
+                <option value="180">So'nggi 6 oy</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="dashboard-summary">
+        <div class="summary-card" id="total-tasks">
+            <h3>Jami topshiriqlar</h3>
+            <div class="summary-value">0</div>
+        </div>
+        <div class="summary-card" id="completed-tasks">
+            <h3>Bajarilgan</h3>
+            <div class="summary-value">0</div>
+        </div>
+        <div class="summary-card" id="active-tasks">
+            <h3>Faol</h3>
+            <div class="summary-value">0</div>
+        </div>
+        <div class="summary-card" id="rejected-tasks">
+            <h3>Rad etilgan</h3>
+            <div class="summary-value">0</div>
+        </div>
+    </div>
+
+    <div class="dashboard-charts">
+        <div class="chart-container">
+            <h2>Kunlik statistika</h2>
+            <canvas id="daily-chart"></canvas>
+        </div>
+    </div>
+
+    <div class="dashboard-tables">
+        <div class="table-container">
+            <h2>Mahallalar reytingi</h2>
+            <div class="export-buttons">
+                <a href="{% url 'admin:export_mahallas' %}" class="export-btn">Excel yuklash</a>
+            </div>
+            <table id="mahalla-table" class="mahalla-table">
+                <thead>
+                    <tr>
+                        <th>Mahalla</th>
+                        <th>Tuman</th>
+                        <th>Holat</th>
+                        <th>Topshiriqlar</th>
+                        <th>Bajarilgan</th>
+                        <th>Bajarilish %</th>
+                        <th>Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be filled by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="mahalla-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+
+            <div class="modal-charts">
+                <div class="chart-container">
+                    <h3>Oylik statistika</h3>
+                    <canvas id="monthly-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Kunlik statistika</h3>
+                    <canvas id="mahalla-daily-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Xodimlar statistikasi</h3>
+                <table id="user-table" class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Xodim</th>
+                            <th>Lavozim</th>
+                            <th>Topshiriqlar</th>
+                            <th>Bajarilgan</th>
+                            <th>Bajarilish %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Will be filled by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const periodSelect = document.getElementById('period-select');
+        let dailyChart = null;
+        let monthlyChart = null;
+        let mahallaDailyChart = null;
+
+        function loadDashboardData() {
+            const days = periodSelect.value;
+            fetch(`/admin/api/dashboard/stats/?days=${days}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateSummary(data);
+                    updateMahallaTable(data.mahalla_stats);
+                    updateDailyChart(data.daily_stats);
+                });
+        }
+
+        function updateSummary(data) {
+            document.querySelector('#total-tasks .summary-value').textContent = data.total_tasks;
+            document.querySelector('#completed-tasks .summary-value').textContent = data.completed_tasks;
+            document.querySelector('#active-tasks .summary-value').textContent = data.active_tasks;
+            document.querySelector('#rejected-tasks .summary-value').textContent = data.rejected_tasks;
+        }
+
+        function updateMahallaTable(mahallas) {
+            const tableBody = document.querySelector('#mahalla-table tbody');
+            tableBody.innerHTML = '';
+
+            mahallas.forEach(mahalla => {
+                const row = document.createElement('tr');
+                row.className = `status-${mahalla.status}`;
+
+                row.innerHTML = `
+                    <td>${mahalla.name}</td>
+                    <td>${mahalla.district}</td>
+                    <td>${getStatusLabel(mahalla.status)}</td>
+                    <td>${mahalla.total}</td>
+                    <td>${mahalla.completed}</td>
+                    <td>${mahalla.completion_rate}%</td>
+                    <td><button class="details-btn" data-id="${mahalla.id}">Batafsil</button></td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.details-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const mahallaId = this.getAttribute('data-id');
+                    openMahallaDetails(mahallaId);
+                });
+            });
+        }
+
+        function getStatusLabel(status) {
+            switch(status) {
+                case 'green': return 'Yashil';
+                case 'yellow': return 'Sariq';
+                case 'red': return 'Qizil';
+                default: return status;
+            }
+        }
+
+        function updateDailyChart(dailyStats) {
+            const ctx = document.getElementById('daily-chart').getContext('2d');
+
+            const labels = dailyStats.map(day => day.date_display);
+            const completedData = dailyStats.map(day => day.completed);
+            const activeData = dailyStats.map(day => day.active);
+            const rejectedData = dailyStats.map(day => day.rejected);
+
+            if (dailyChart) {
+                dailyChart.destroy();
+            }
+
+            dailyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Bajarilgan',
+                            data: completedData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Faol',
+                            data: activeData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Rad etilgan',
+                            data: rejectedData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function openMahallaDetails(mahallaId) {
+            fetch(`/admin/api/dashboard/mahalla-stats/${mahallaId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modal-title').textContent = `${data.mahalla.name} (${data.mahalla.district})`;
+
+                    updateUserTable(data.user_stats);
+                    updateMonthlyChart(data.monthly_stats);
+                    updateMahallaDailyChart(data.daily_stats);
+
+                    document.getElementById('mahalla-details-modal').style.display = 'block';
+                });
+        }
+
+        function updateUserTable(users) {
+            const tableBody = document.querySelector('#user-table tbody');
+            tableBody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.job_title}</td>
+                    <td>${user.total}</td>
+                    <td>${user.completed}</td>
+                    <td>${user.completion_rate}%</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateMonthlyChart(monthlyStats) {
+            const ctx = document.getElementById('monthly-chart').getContext('2d');
+
+            const labels = monthlyStats.map(month => month.month_name);
+            const completedData = monthlyStats.map(month => month.completed);
+            const totalData = monthlyStats.map(month => month.total);
+            const completionRateData = monthlyStats.map(month => month.completion_rate);
+
+            if (monthlyChart) {
+                monthlyChart.destroy();
+            }
+
+            monthlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Jami',
+                            data: totalData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Bajarilgan',
+                            data: completedData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMahallaDailyChart(dailyStats) {
+            const ctx = document.getElementById('mahalla-daily-chart').getContext('2d');
+
+            const labels = dailyStats.map(day => day.date.substring(5));
+            const completionRateData = dailyStats.map(day => day.completion_rate);
+
+            if (mahallaDailyChart) {
+                mahallaDailyChart.destroy();
+            }
+
+            mahallaDailyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Bajarilish %',
+                            data: completionRateData,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('mahalla-details-modal').style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('mahalla-details-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        periodSelect.addEventListener('change', loadDashboardData);
+
+        loadDashboardData();
+    });
+</script>
+{% endblock %}
+
