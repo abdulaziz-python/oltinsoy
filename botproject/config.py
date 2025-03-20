@@ -7,8 +7,8 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN environment variable is not set")
 
-API_URL = os.getenv("API_URL", "http://localhost:8000/api/")
-API_BASE_URL = "http://localhost:8000/api/"
+API_URL = os.getenv("API_URL", "https://oltinsoy.onrender.com/api")
+API_BASE_URL = "https://oltinsoy.onrender.com/api/"
 API_TIMEOUT = int(os.getenv("API_TIMEOUT", "30"))
 API_RETRY_COUNT = int(os.getenv("API_RETRY_COUNT", "3"))
 API_RETRY_DELAY = int(os.getenv("API_RETRY_DELAY", "1"))
