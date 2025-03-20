@@ -635,3 +635,14 @@ def get_tasks(request):
         'tasks': tasks
     })
 
+
+def simple_page(request):
+    response_text = """
+    <h1>Welcome to the Homepage</h1>
+    <p>Here are the available pages:</p>
+    <ul>
+        <li><a href="/admin/">Admin Panel</a></li>
+        <li><a href="/api/">API</a></li>
+    </ul>
+    """
+    return HttpResponse(response_text)
