@@ -54,10 +54,16 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'oltinsoy',
+        'USER': 'oltinsoy_user',
+        'PASSWORD': 'WUzwaixEbAmg1K3gQHII4lJMdV4GVii9',
+        'HOST': 'dpg-cvds1s3tq21c73e8e8rg-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -84,9 +90,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-CRF_ALLOWED_ORIGINS = ["https://d971-84-54-73-243.ngrok-free.app ", "http://localhost", 'http://127.0.0.1']
+CRF_ALLOWED_ORIGINS = ["https://d971-84-54-73-243.ngrok-free.app ", "http://localhost", 'http://127.0.0.1', 'https://oltinsoy.onrender.com']
 CSRF_TRUSTED_ORIGINS = [
     'https://d971-84-54-73-243.ngrok-free.app',
+    'https://oltinsoy.onrender.com',
 ]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

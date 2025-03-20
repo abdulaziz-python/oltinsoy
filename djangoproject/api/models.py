@@ -166,10 +166,13 @@ class EmployeeType(models.Model):
     def __str__(self):
         return self.name
 
+
+
+
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
-            raise ValueError('Foydalanuvchi nomi kiritilishi shart')
+            raise ValueError('The Username field must be set')
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -181,35 +184,27 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
 
         if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser is_staff=True bo\'lishi kerak.')
+            raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser is_superuser=True bo\'lishi kerak.')
+            raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(username, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField('Foydalanuvchi nomi', max_length=150, unique=True)
-    email = models.EmailField('Elektron pochta', blank=True)
-    full_name = models.CharField('To\'liq ism', max_length=255, blank=True)
-    phone = models.CharField('Telefon raqami', max_length=20, blank=True)
-    jshir = models.CharField('JSHIR', max_length=14, blank=True)
-    telegram_id = models.BigIntegerField('Telegram ID', null=True, blank=True, unique=True)
-    job_title = models.ForeignKey(JobTitle, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lavozim')
-    employee_type = models.ForeignKey(EmployeeType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Xodim turi')
-    mahallah = models.ForeignKey(Mahallah, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Mahalla')
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(blank=True)
+    full_name = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    jshir = models.CharField(max_length=14, blank=True)
+    telegram_id = models.BigIntegerField(null=True, blank=True, unique=True)
+    job_title = models.ForeignKey('JobTitle', on_delete=models.SET_NULL, null=True, blank=True)
+    employee_type = models.ForeignKey('EmployeeType', on_delete=models.SET_NULL, null=True, blank=True)
+    mahallah = models.ForeignKey('Mahallah', on_delete=models.SET_NULL, null=True, blank=True)
 
-    is_staff = models.BooleanField(
-        'Admin holati',
-        default=False,
-        help_text='Foydalanuvchining admin paneliga kirish huquqi bor-yo\'qligini belgilaydi.',
-    )
-    is_active = models.BooleanField(
-        'Faol',
-        default=True,
-        help_text='Foydalanuvchi faol yoki faol emasligini belgilaydi. Foydalanuvchini o\'chirish o\'rniga bu parametrni o\'zgartiring.',
-    )
-    date_joined = models.DateTimeField('Ro\'yxatdan o\'tgan sana', default=timezone.now)
-    last_login = models.DateTimeField('So\'nggi kirish', null=True, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()
 
