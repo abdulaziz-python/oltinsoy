@@ -17,8 +17,5 @@ urlpatterns = [
     path('mahallas/', views.get_mahallas, name='get_mahallas'),
     path('users/telegram-ids/', views.get_telegram_ids, name='get_telegram_ids'),
     path('grade-task/', views.grade_task, name='grade_task'),
+    path('', views.simple_page, name='simple_page'),  # Add this line
 ]
-
-
-
-
